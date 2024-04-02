@@ -1,5 +1,4 @@
 package org.example;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,7 +26,7 @@ public class Main {
                         listarCliente();
                         break;
                     case 3:
-                        //editarAlumno();
+                        editarCliente();
                         break;
                     case 4:
                         //eliminarAlumno();
@@ -56,7 +55,7 @@ public class Main {
         System.out.println();
         System.out.print("Ingrese una opcion: ");
     }
-    private static void agregarCliente() throws IOException, ClassNotFoundException, SQLException, ParseException {
+    private static void agregarCliente() throws  SQLException, ParseException {
         System.out.print("Nombre: ");
         String nombre = scannerStr.nextLine();
         System.out.print("Apellido: ");
@@ -67,21 +66,21 @@ public class Main {
         String correo = scannerStr.nextLine();
         System.out.print("Direccion: ");
         String direccion = scannerStr.nextLine();
+        // lectura de la fecha de nacimiento en formato String
         System.out.print("Fecha de Nacimiento: ");
-
         String strFechaNacimiento = scannerStr.nextLine();
-        // Conversión de String a Date
+        // Conversión de fecha de String a Date
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        Date fechaNacimiento = sdf.parse(strFechaNacimiento); // Aquí se puede lanzar una ParseException
+        Date fechaNacimiento = sdf.parse(strFechaNacimiento);
+
         //System.out.println("La Fecha formato fecha " + fechaNacimiento);
 
         // Instanciación del cliente con la fecha convertida
         Cliente cliente = new Cliente(nombre, apellido, telefono, correo, direccion,fechaNacimiento);
-
         // Instanciación del cliente con la fecha convertida
-
         GestorClientes gestor = new GestorClientes();
         gestor.alta(cliente); // Llamada al método alta del gestor para agregar el alumno
+
         System.out.println("Alumno agregado exitosamente.");
     }
     private static void listarCliente() throws SQLException {
@@ -104,6 +103,47 @@ public class Main {
                     cliente.getCorreo(),
                     cliente.getDireccion(),
                     fechaNacFormateada);
+        }
+    }
+    private static void editarCliente() throws SQLException, ParseException {
+        System.out.print("Ingrese el ID del cliente a modificar: ");
+        int id = scannerNum.nextInt();
+        GestorClientes gestor = new GestorClientes();
+        Cliente cliente = gestor.buscar(id); // Llamada al método buscar del gestor para obtener el cliente a modificar
+
+        if (cliente != null) {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            String fechaNacFormateada = (cliente.getFechaNacimiento() != null) ? sdf.format(cliente.getFechaNacimiento()) : "N/A";
+            System.out.println("Fecha de Nacimiento: " + fechaNacFormateada);
+
+            System.out.println("Ingrese los nuevos datos del cliente:");
+            System.out.print("Nombre: ("+cliente.getNombre()+") : ");
+            String nombre = scannerStr.nextLine();
+            System.out.print("Apellido: ("+cliente.getApellido()+") : ");
+            String apellido = scannerStr.nextLine();
+            System.out.print("Telefono: ("+cliente.getTelefono()+") : ");
+            String telefono = scannerStr.nextLine();
+            System.out.print("Correo: ("+cliente.getCorreo()+") : ");
+            String correo = scannerStr.nextLine();
+            System.out.print("Direccion: ("+cliente.getDireccion()+") : ");
+            String direccion = scannerStr.nextLine();
+            System.out.print("Fecha de Nacimiento: ("+fechaNacFormateada+") : ");
+            String strFechaNacimiento = scannerStr.nextLine();
+            SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
+            Date fechaNacimiento = sdf2.parse(strFechaNacimiento);
+
+            cliente.setNombre(nombre);
+            cliente.setApellido(apellido);
+            cliente.setTelefono(telefono);
+            cliente.setCorreo(correo);
+            cliente.setDireccion(direccion);
+            cliente.setFechaNacimiento(fechaNacimiento);
+
+            gestor.modificar(cliente); // Llamada al método modificar del gestor para actualizar el cliente
+
+            System.out.println("Cliente modificado exitosamente.");
+        } else {
+            System.out.println("No se encontró el cliente con el ID ingresado.");
         }
     }
 }

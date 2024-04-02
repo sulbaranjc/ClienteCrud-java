@@ -46,7 +46,43 @@ public class GestorClientes {
         consulta.close();
         return lista;
     }
-
+    public Cliente buscar(int id) throws SQLException {
+        Statement consulta = c.conectar().createStatement();
+        ResultSet rs = consulta.executeQuery("SELECT * FROM cliente WHERE id = " + id);
+        Cliente p = null;
+        if (rs.next()) {
+            p = new Cliente(
+                    rs.getInt("id"),
+                    rs.getString("nombre"),
+                    rs.getString("apellido"),
+                    rs.getString("telefono"),
+                    rs.getString("correo"),
+                    rs.getString("direccion"),
+                    rs.getDate("fecha_nacimiento")
+            );
+        }
+        rs.close();
+        consulta.close();
+        return p;
+    }
+    public void modificar(Cliente p) throws SQLException {
+        Statement consulta = c.conectar().createStatement();
+        // Conversión de Date a String. tratamiento de la fecha para que sea aceptada por MySQL
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String strFechaFormateada = sdf.format(p.getFechaNacimiento());
+        // String de actualización
+        String cadena = "UPDATE cliente SET "
+                + "nombre = '" + p.getNombre() + "', "
+                + "apellido = '" + p.getApellido() + "', "
+                + "telefono = '" + p.getTelefono() + "', "
+                + "correo = '" + p.getCorreo() + "', "
+                + "direccion = '" + p.getDireccion() + "', "
+                + "fecha_nacimiento = '" + strFechaFormateada + "' "
+                + "WHERE id = " + p.getId();
+        // System.out.println(cadena);
+        consulta.executeUpdate(cadena);
+        consulta.close();
+    }
 
 
 }
