@@ -29,7 +29,7 @@ public class Main {
                         editarCliente();
                         break;
                     case 4:
-                        //eliminarAlumno();
+                        eliminarCliente();
                         break;
                     case 0:
                         salir = true;
@@ -49,7 +49,7 @@ public class Main {
         System.out.println("================");
         System.out.println("1. Agregar Cliente");
         System.out.println("2. Listar Cientes");
-        System.out.println("3. Modifier Cliente");
+        System.out.println("3. Modificar Cliente");
         System.out.println("4. Eliminar Cliente");
         System.out.println("0. Salir");
         System.out.println();
@@ -142,6 +142,19 @@ public class Main {
             gestor.modificar(cliente); // Llamada al método modificar del gestor para actualizar el cliente
 
             System.out.println("Cliente modificado exitosamente.");
+        } else {
+            System.out.println("No se encontró el cliente con el ID ingresado.");
+        }
+    }
+    private static void eliminarCliente() throws SQLException {
+        System.out.print("Ingrese el ID del cliente a eliminar: ");
+        int id = scannerNum.nextInt();
+        GestorClientes gestor = new GestorClientes();
+        Cliente cliente = gestor.buscar(id); // Llamada al método buscar del gestor para obtener el cliente a eliminar
+
+        if (cliente != null) {
+            gestor.eliminar(cliente.getId()); // Llamada al método baja del gestor para eliminar el cliente
+            System.out.println("Cliente eliminado exitosamente.");
         } else {
             System.out.println("No se encontró el cliente con el ID ingresado.");
         }

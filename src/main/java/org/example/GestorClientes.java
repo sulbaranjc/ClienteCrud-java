@@ -83,6 +83,11 @@ public class GestorClientes {
         consulta.executeUpdate(cadena);
         consulta.close();
     }
+    public void eliminar(int id) throws SQLException {
+        Statement consulta = c.conectar().createStatement();
+        consulta.executeUpdate("DELETE FROM cliente WHERE id = " + id);
+        consulta.close();
+    }
 
 
 }
